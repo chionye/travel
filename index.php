@@ -6,10 +6,8 @@ $pageTitle = 'Book Flights & Hotels';
 
 <!-- Hero Section -->
 <section class="hero-section min-h-[90vh] flex items-center relative">
-  <!-- Background overlay with travel imagery feel -->
   <div class="absolute inset-0 overflow-hidden">
     <div class="absolute inset-0 opacity-20" style="background:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80') center/cover no-repeat"></div>
-    <!-- Animated circles -->
     <div class="absolute top-20 right-10 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl"></div>
     <div class="absolute bottom-20 left-10 w-80 h-80 bg-sky-300/10 rounded-full blur-3xl"></div>
   </div>
@@ -31,147 +29,241 @@ $pageTitle = 'Book Flights & Hotels';
     <div class="max-w-5xl mx-auto">
       <!-- Tabs -->
       <div class="flex items-center gap-2 mb-4 justify-center">
-        <button class="search-tab active" data-tab="flights">
-          <i class="fas fa-plane mr-2"></i>Flights
-        </button>
-        <button class="search-tab" data-tab="hotels">
-          <i class="fas fa-hotel mr-2"></i>Hotels
-        </button>
-        <button class="search-tab" data-tab="both">
-          <i class="fas fa-suitcase mr-2"></i>Flights + Hotels
-        </button>
+        <button class="search-tab active" data-tab="flights"><i class="fas fa-plane mr-2"></i>Flights</button>
+        <button class="search-tab" data-tab="hotels"><i class="fas fa-hotel mr-2"></i>Hotels</button>
+        <button class="search-tab" data-tab="both"><i class="fas fa-suitcase mr-2"></i>Flights + Hotels</button>
       </div>
 
-      <!-- Search Panel -->
       <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-6">
 
-        <!-- Flights Panel -->
+        <!-- FLIGHTS PANEL -->
         <div id="panel-flights" class="search-panel">
           <form action="flights.php" method="get">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-plane-departure mr-1 text-sky-500"></i> From</label>
-                <input type="text" name="origin" placeholder="City or Airport" class="form-input" required>
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-plane-arrival mr-1 text-sky-500"></i> To</label>
-                <input type="text" name="destination" placeholder="City or Airport" class="form-input" required>
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-calendar mr-1 text-sky-500"></i> Date</label>
-                <input type="text" name="date" placeholder="Departure Date" class="form-input datepicker" required>
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-users mr-1 text-sky-500"></i> Passengers</label>
-                <div class="relative">
-                  <button type="button" class="form-input text-left flex items-center justify-between" id="pax-trigger">
-                    <span id="passenger-display">1 Adult</span>
-                    <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+            <!-- Cabin class row -->
+            <div class="flex gap-5 mb-4">
+              <?php foreach (['economy'=>'Economy','business'=>'Business','first'=>'First Class'] as $val=>$label): ?>
+                <label class="flex items-center gap-1.5 cursor-pointer">
+                  <input type="radio" name="class" value="<?= $val ?>" <?= $val==='economy'?'checked':'' ?> class="accent-sky-600">
+                  <span class="text-sm font-medium text-gray-600"><?= $label ?></span>
+                </label>
+              <?php endforeach; ?>
+            </div>
+
+            <!-- Unified bar -->
+            <div style="display:flex;flex-direction:column;border:1px solid #e5e7eb;border-radius:1rem;overflow:visible;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+              <div style="display:flex;flex-wrap:wrap">
+
+                <!-- From -->
+                <div style="flex:1;min-width:160px;border-bottom:1px solid #e5e7eb;position:relative">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">
+                      <i class="fas fa-plane-departure" style="color:#38bdf8;margin-right:4px"></i>From
+                    </p>
+                    <input type="text" name="origin" placeholder="City or airport" required
+                      style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0">
+                  </div>
+                </div>
+
+                <!-- Swap -->
+                <div style="display:flex;align-items:center;padding:0 4px;border-bottom:1px solid #e5e7eb;background:#fff">
+                  <button type="button" id="swap-btn"
+                    style="width:30px;height:30px;border-radius:50%;background:#f0f9ff;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                    <i class="fas fa-exchange-alt" style="color:#0ea5e9;font-size:11px"></i>
                   </button>
-                  <input type="hidden" name="adults" value="1">
-                  <input type="hidden" name="children" value="0">
-                  <div class="absolute top-full left-0 w-64 bg-white shadow-xl rounded-2xl p-4 z-20 hidden" id="pax-dropdown">
-                    <div class="flex items-center justify-between mb-3">
-                      <span class="font-medium text-gray-700">Adults</span>
-                      <div class="flex items-center gap-3">
-                        <button type="button" class="pax-btn w-8 h-8 rounded-full bg-sky-100 text-sky-600 font-bold" data-type="adults" data-action="dec">-</button>
-                        <span class="font-semibold w-4 text-center" id="adults-val">1</span>
-                        <button type="button" class="pax-btn w-8 h-8 rounded-full bg-sky-100 text-sky-600 font-bold" data-type="adults" data-action="inc">+</button>
+                </div>
+
+                <!-- To -->
+                <div style="flex:1;min-width:160px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">
+                      <i class="fas fa-plane-arrival" style="color:#38bdf8;margin-right:4px"></i>To
+                    </p>
+                    <input type="text" name="destination" placeholder="City or airport" required
+                      style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0">
+                  </div>
+                </div>
+
+                <!-- Date -->
+                <div style="flex:1;min-width:140px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">
+                      <i class="fas fa-calendar-alt" style="color:#38bdf8;margin-right:4px"></i>Date
+                    </p>
+                    <input type="text" name="date" placeholder="Departure date" required readonly
+                      class="datepicker"
+                      style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0;cursor:pointer">
+                  </div>
+                </div>
+
+                <!-- Passengers -->
+                <div style="flex:1;min-width:140px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb;position:relative">
+                  <div style="padding:12px 16px;cursor:pointer" id="pax-trigger">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">
+                      <i class="fas fa-users" style="color:#38bdf8;margin-right:4px"></i>Passengers
+                    </p>
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                      <span style="font-size:14px;font-weight:600;color:#111827" id="passenger-display">1 Adult</span>
+                      <i class="fas fa-chevron-down" style="color:#9ca3af;font-size:10px;margin-left:6px"></i>
+                    </div>
+                    <input type="hidden" name="adults" value="1">
+                    <input type="hidden" name="children" value="0">
+                  </div>
+                  <!-- Dropdown -->
+                  <div id="pax-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);left:0;width:240px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:20px;box-shadow:0 20px 40px rgba(0,0,0,0.12);z-index:50">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                      <div><p style="font-weight:600;color:#111827;font-size:14px;margin:0">Adults</p><p style="color:#9ca3af;font-size:12px;margin:0">Age 12+</p></div>
+                      <div style="display:flex;align-items:center;gap:12px">
+                        <button type="button" class="pax-btn" data-type="adults" data-action="dec"
+                          style="width:30px;height:30px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:700;cursor:pointer">-</button>
+                        <span id="adults-val" style="font-weight:700;color:#111827;min-width:16px;text-align:center">1</span>
+                        <button type="button" class="pax-btn" data-type="adults" data-action="inc"
+                          style="width:30px;height:30px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:700;cursor:pointer">+</button>
                       </div>
                     </div>
-                    <div class="flex items-center justify-between">
-                      <span class="font-medium text-gray-700">Children</span>
-                      <div class="flex items-center gap-3">
-                        <button type="button" class="pax-btn w-8 h-8 rounded-full bg-sky-100 text-sky-600 font-bold" data-type="children" data-action="dec">-</button>
-                        <span class="font-semibold w-4 text-center" id="children-val">0</span>
-                        <button type="button" class="pax-btn w-8 h-8 rounded-full bg-sky-100 text-sky-600 font-bold" data-type="children" data-action="inc">+</button>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                      <div><p style="font-weight:600;color:#111827;font-size:14px;margin:0">Children</p><p style="color:#9ca3af;font-size:12px;margin:0">Age 2–11</p></div>
+                      <div style="display:flex;align-items:center;gap:12px">
+                        <button type="button" class="pax-btn" data-type="children" data-action="dec"
+                          style="width:30px;height:30px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:700;cursor:pointer">-</button>
+                        <span id="children-val" style="font-weight:700;color:#111827;min-width:16px;text-align:center">0</span>
+                        <button type="button" class="pax-btn" data-type="children" data-action="inc"
+                          style="width:30px;height:30px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;font-weight:700;cursor:pointer">+</button>
                       </div>
                     </div>
-                    <button type="button" class="mt-3 w-full bg-sky-600 text-white py-2 rounded-xl text-sm font-semibold" id="pax-done">Done</button>
+                    <button type="button" id="pax-done"
+                      style="width:100%;background:#0284c7;color:#fff;font-weight:600;padding:10px;border-radius:10px;border:none;cursor:pointer;font-size:14px">Done</button>
+                  </div>
+                </div>
+
+              </div><!-- end flex-wrap row -->
+
+              <!-- Search button full width on its own row -->
+              <div>
+                <button type="submit"
+                  style="width:100%;background:#0284c7;color:#fff;font-weight:700;padding:14px;border:none;border-radius:0 0 1rem 1rem;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s"
+                  onmouseover="this.style.background='#0369a1'" onmouseout="this.style.background='#0284c7'">
+                  <i class="fas fa-search"></i> Search Flights
+                </button>
+              </div>
+
+            </div><!-- end unified bar -->
+          </form>
+        </div>
+
+        <!-- HOTELS PANEL -->
+        <div id="panel-hotels" class="search-panel hidden">
+          <form action="hotels.php" method="get">
+            <div style="display:flex;flex-direction:column;border:1px solid #e5e7eb;border-radius:1rem;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+              <div style="display:flex;flex-wrap:wrap">
+
+                <!-- Destination -->
+                <div style="flex:2;min-width:200px;border-bottom:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">
+                      <i class="fas fa-map-marker-alt" style="color:#38bdf8;margin-right:4px"></i>Destination
+                    </p>
+                    <input type="text" name="city" placeholder="City, region or hotel name" required
+                      style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0">
+                  </div>
+                </div>
+
+                <!-- Check-in -->
+                <div style="flex:1;min-width:140px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">
+                      <i class="fas fa-calendar-check" style="color:#38bdf8;margin-right:4px"></i>Check-in
+                    </p>
+                    <input type="text" name="checkin" placeholder="Add date" required readonly
+                      class="datepicker-checkin"
+                      style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0;cursor:pointer">
+                  </div>
+                </div>
+
+                <!-- Check-out -->
+                <div style="flex:1;min-width:140px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">
+                      <i class="fas fa-calendar-times" style="color:#38bdf8;margin-right:4px"></i>Check-out
+                    </p>
+                    <input type="text" name="checkout" placeholder="Add date" required readonly
+                      class="datepicker-checkout"
+                      style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0;cursor:pointer">
+                  </div>
+                </div>
+
+              </div>
+              <button type="submit"
+                style="width:100%;background:#0284c7;color:#fff;font-weight:700;padding:14px;border:none;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s"
+                onmouseover="this.style.background='#0369a1'" onmouseout="this.style.background='#0284c7'">
+                <i class="fas fa-search"></i> Search Hotels
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- FLIGHTS + HOTELS PANEL -->
+        <div id="panel-both" class="search-panel hidden">
+          <form action="flights.php" method="get">
+            <input type="hidden" name="type" value="both">
+
+            <!-- Row 1 -->
+            <div style="display:flex;flex-direction:column;border:1px solid #e5e7eb;border-radius:1rem;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:10px">
+              <div style="display:flex;flex-wrap:wrap">
+                <div style="flex:1;min-width:150px;border-bottom:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px"><i class="fas fa-plane-departure" style="color:#38bdf8;margin-right:4px"></i>Flying From</p>
+                    <input type="text" name="origin" placeholder="City or airport" required style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0">
+                  </div>
+                </div>
+                <div style="flex:1;min-width:150px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px"><i class="fas fa-plane-arrival" style="color:#38bdf8;margin-right:4px"></i>Flying To</p>
+                    <input type="text" name="destination" placeholder="City or airport" required style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0">
+                  </div>
+                </div>
+                <div style="flex:1;min-width:130px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px"><i class="fas fa-calendar-alt" style="color:#38bdf8;margin-right:4px"></i>Departure</p>
+                    <input type="text" name="date" placeholder="Date" required readonly class="datepicker" style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0;cursor:pointer">
+                  </div>
+                </div>
+                <div style="flex:1;min-width:120px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px"><i class="fas fa-users" style="color:#38bdf8;margin-right:4px"></i>Guests</p>
+                    <input type="number" name="adults" min="1" max="9" value="1" style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0">
                   </div>
                 </div>
               </div>
             </div>
-            <div class="flex items-center justify-between mt-4">
-              <div class="flex gap-4">
-                <?php foreach (['economy'=>'Economy','business'=>'Business','first'=>'First Class'] as $val=>$label): ?>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="class" value="<?= $val ?>" <?= $val==='economy'?'checked':'' ?> class="text-sky-600">
-                    <span class="text-sm font-medium text-gray-700"><?= $label ?></span>
-                  </label>
-                <?php endforeach; ?>
+
+            <!-- Row 2 -->
+            <div style="display:flex;flex-direction:column;border:1px solid #e5e7eb;border-radius:1rem;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+              <div style="display:flex;flex-wrap:wrap">
+                <div style="flex:1;min-width:150px;border-bottom:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px"><i class="fas fa-calendar-check" style="color:#38bdf8;margin-right:4px"></i>Hotel Check-in</p>
+                    <input type="text" name="checkin" placeholder="Check-in date" readonly class="datepicker-checkin" style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0;cursor:pointer">
+                  </div>
+                </div>
+                <div style="flex:1;min-width:150px;border-bottom:1px solid #e5e7eb;border-left:1px solid #e5e7eb">
+                  <div style="padding:12px 16px">
+                    <p style="font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px"><i class="fas fa-calendar-times" style="color:#38bdf8;margin-right:4px"></i>Hotel Check-out</p>
+                    <input type="text" name="checkout" placeholder="Check-out date" readonly class="datepicker-checkout" style="width:100%;font-size:14px;font-weight:600;color:#111827;background:transparent;border:0;outline:none;padding:0;cursor:pointer">
+                  </div>
+                </div>
               </div>
-              <button type="submit" class="btn-primary">
-                <i class="fas fa-search mr-2"></i>Search Flights
+              <button type="submit"
+                style="width:100%;background:#0284c7;color:#fff;font-weight:700;padding:14px;border:none;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s"
+                onmouseover="this.style.background='#0369a1'" onmouseout="this.style.background='#0284c7'">
+                <i class="fas fa-search"></i> Search Package
               </button>
             </div>
+
           </form>
         </div>
 
-        <!-- Hotels Panel -->
-        <div id="panel-hotels" class="search-panel hidden">
-          <form action="hotels.php" method="get">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div class="lg:col-span-2">
-                <label class="form-label text-gray-700"><i class="fas fa-map-marker-alt mr-1 text-sky-500"></i> Destination</label>
-                <input type="text" name="city" placeholder="City, Region or Hotel Name" class="form-input" required>
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-calendar-check mr-1 text-sky-500"></i> Check-in</label>
-                <input type="text" name="checkin" placeholder="Check-in Date" class="form-input datepicker-checkin" required>
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-calendar-times mr-1 text-sky-500"></i> Check-out</label>
-                <input type="text" name="checkout" placeholder="Check-out Date" class="form-input datepicker-checkout" required>
-              </div>
-            </div>
-            <div class="flex justify-end mt-4">
-              <button type="submit" class="btn-primary">
-                <i class="fas fa-search mr-2"></i>Search Hotels
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Flights + Hotels Panel -->
-        <div id="panel-both" class="search-panel hidden">
-          <form action="flights.php" method="get">
-            <input type="hidden" name="type" value="both">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-plane-departure mr-1 text-sky-500"></i> Flying From</label>
-                <input type="text" name="origin" placeholder="City or Airport" class="form-input" required>
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-plane-arrival mr-1 text-sky-500"></i> Flying To</label>
-                <input type="text" name="destination" placeholder="City or Airport" class="form-input" required>
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-calendar mr-1 text-sky-500"></i> Departure</label>
-                <input type="text" name="date" placeholder="Date" class="form-input datepicker" required>
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-calendar-check mr-1 text-sky-500"></i> Hotel Check-in</label>
-                <input type="text" name="checkin" placeholder="Check-in" class="form-input datepicker-checkin">
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-calendar-times mr-1 text-sky-500"></i> Hotel Check-out</label>
-                <input type="text" name="checkout" placeholder="Check-out" class="form-input datepicker-checkout">
-              </div>
-              <div>
-                <label class="form-label text-gray-700"><i class="fas fa-users mr-1 text-sky-500"></i> Guests</label>
-                <input type="number" name="adults" min="1" max="9" value="1" class="form-input">
-              </div>
-            </div>
-            <div class="flex justify-end mt-4">
-              <button type="submit" class="btn-primary">
-                <i class="fas fa-search mr-2"></i>Search Package
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+      </div><!-- end panel wrapper -->
+    </div><!-- end search box -->
   </div>
 </section>
 
@@ -179,22 +271,10 @@ $pageTitle = 'Book Flights & Hotels';
 <section class="bg-white py-8 border-b border-gray-100">
   <div class="max-w-7xl mx-auto px-4">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-      <div class="flex flex-col items-center gap-2">
-        <div class="text-3xl font-extrabold text-sky-700">50K+</div>
-        <div class="text-sm text-gray-500">Happy Travelers</div>
-      </div>
-      <div class="flex flex-col items-center gap-2">
-        <div class="text-3xl font-extrabold text-sky-700">200+</div>
-        <div class="text-sm text-gray-500">Destinations</div>
-      </div>
-      <div class="flex flex-col items-center gap-2">
-        <div class="text-3xl font-extrabold text-sky-700">500+</div>
-        <div class="text-sm text-gray-500">Partner Hotels</div>
-      </div>
-      <div class="flex flex-col items-center gap-2">
-        <div class="text-3xl font-extrabold text-sky-700">24/7</div>
-        <div class="text-sm text-gray-500">Customer Support</div>
-      </div>
+      <div class="flex flex-col items-center gap-2"><div class="text-3xl font-extrabold text-sky-700">50K+</div><div class="text-sm text-gray-500">Happy Travelers</div></div>
+      <div class="flex flex-col items-center gap-2"><div class="text-3xl font-extrabold text-sky-700">200+</div><div class="text-sm text-gray-500">Destinations</div></div>
+      <div class="flex flex-col items-center gap-2"><div class="text-3xl font-extrabold text-sky-700">500+</div><div class="text-sm text-gray-500">Partner Hotels</div></div>
+      <div class="flex flex-col items-center gap-2"><div class="text-3xl font-extrabold text-sky-700">24/7</div><div class="text-sm text-gray-500">Customer Support</div></div>
     </div>
   </div>
 </section>
@@ -228,10 +308,8 @@ $pageTitle = 'Book Flights & Hotels';
   </div>
 </section>
 
-<!-- Popular Destinations -->
-<?php
-$hotels = db()->query('SELECT * FROM hotels WHERE is_active=1 ORDER BY star_rating DESC LIMIT 6')->fetchAll();
-?>
+<!-- Popular Hotels -->
+<?php $hotels = db()->query('SELECT * FROM hotels WHERE is_active=1 ORDER BY star_rating DESC LIMIT 6')->fetchAll(); ?>
 <?php if ($hotels): ?>
 <section class="py-20 bg-white">
   <div class="max-w-7xl mx-auto px-4">
@@ -258,9 +336,7 @@ $hotels = db()->query('SELECT * FROM hotels WHERE is_active=1 ORDER BY star_rati
             </div>
           </div>
           <div class="p-5">
-            <div class="flex items-start justify-between mb-2">
-              <h3 class="font-bold text-gray-900 text-lg leading-tight"><?= e($hotel['name']) ?></h3>
-            </div>
+            <h3 class="font-bold text-gray-900 text-lg leading-tight mb-2"><?= e($hotel['name']) ?></h3>
             <div class="flex items-center gap-1 mb-3"><?= starRating($hotel['star_rating']) ?></div>
             <?php if ($hotel['amenities']): ?>
               <div class="flex flex-wrap gap-1 mb-4">
@@ -269,9 +345,7 @@ $hotels = db()->query('SELECT * FROM hotels WHERE is_active=1 ORDER BY star_rati
                 <?php endforeach; ?>
               </div>
             <?php endif; ?>
-            <a href="hotels.php?city=<?= urlencode($hotel['city']) ?>" class="btn-primary btn-sm w-full justify-center">
-              View Hotel
-            </a>
+            <a href="hotels.php?city=<?= urlencode($hotel['city']) ?>" class="btn-primary btn-sm w-full justify-center">View Hotel</a>
           </div>
         </div>
       <?php endforeach; ?>
@@ -300,7 +374,7 @@ $hotels = db()->query('SELECT * FROM hotels WHERE is_active=1 ORDER BY star_rati
           <div class="w-20 h-20 rounded-2xl bg-gradient-to-br <?= $s['color'] ?> flex items-center justify-center mx-auto mb-6 shadow-lg float-anim">
             <i class="fas <?= $s['icon'] ?> text-white text-3xl"></i>
           </div>
-          <div class="absolute -top-3 -right-3 md:left-auto left-1/2 w-8 h-8 bg-sky-100 text-sky-700 rounded-full flex items-center justify-center font-extrabold text-sm"><?= $s['num'] ?></div>
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:-right-3 w-8 h-8 bg-sky-100 text-sky-700 rounded-full flex items-center justify-center font-extrabold text-sm"><?= $s['num'] ?></div>
           <h3 class="text-xl font-bold text-gray-900 mb-3"><?= $s['title'] ?></h3>
           <p class="text-gray-500 leading-relaxed"><?= $s['desc'] ?></p>
         </div>
@@ -326,19 +400,26 @@ $hotels = db()->query('SELECT * FROM hotels WHERE is_active=1 ORDER BY star_rati
 </section>
 
 <script>
-$(function() {
-  // Passenger dropdown toggle
-  $('#pax-trigger').on('click', function(e) {
+$(function () {
+  /* passenger dropdown */
+  $('#pax-trigger').on('click', function (e) {
     e.stopPropagation();
-    $('#pax-dropdown').toggleClass('hidden');
+    var $d = $('#pax-dropdown');
+    $d.css('display', $d.is(':hidden') ? 'block' : 'none');
   });
-  $('#pax-done').on('click', function() {
-    $('#pax-dropdown').addClass('hidden');
+  $('#pax-done').on('click', function () {
+    $('#pax-dropdown').hide();
   });
-  $(document).on('click', function(e) {
+  $(document).on('click', function (e) {
     if (!$(e.target).closest('#pax-trigger, #pax-dropdown').length) {
-      $('#pax-dropdown').addClass('hidden');
+      $('#pax-dropdown').hide();
     }
+  });
+
+  /* swap origin / destination */
+  $('#swap-btn').on('click', function () {
+    var $f = $('[name="origin"]'), $t = $('[name="destination"]'), tmp = $f.val();
+    $f.val($t.val()); $t.val(tmp);
   });
 });
 </script>
