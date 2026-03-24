@@ -1,6 +1,9 @@
 <?php
 $pageTitle = 'Settings';
-require_once __DIR__ . '/includes/header.php';
+
+// Process POST BEFORE any output
+require_once dirname(__DIR__) . '/includes/auth.php';
+requireAdmin();
 
 $tab = $_GET['tab'] ?? 'site';
 $tabs = [
@@ -65,6 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $tab = $postTab;
 }
+
+// Now include header (outputs HTML)
+require_once __DIR__ . '/includes/header.php';
 
 $settings = getAllSettings();
 $adminId  = $_SESSION['admin_id'];
